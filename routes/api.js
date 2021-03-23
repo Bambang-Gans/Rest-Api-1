@@ -8,7 +8,7 @@ var alpinofc = db.get("alpinofc");
 	console.log('')
 }
 
-var creatorList = ['@alpin','@alpin','@alpin_xploit','@alpin', '@alpinofc','@alpinofc','@alpinofc'];
+var creatorList = ['@sadboy.edtz','@sadboy.edtz','@sadboy.edtz','@sadboy.edtz', '@sadboy.edtz','@sadboy.edtz','@sadboy.edtz'];
 var creator = creatorList[Math.floor(Math.random() * creatorList.length)];
 
 
@@ -41,7 +41,7 @@ loghandler = {
         creator: `${creator}`,
         code: 406,
         message: 'masukan parameter apikey',
-        getApikey: 'gak punya apikey? chat gw aja yaaa di wa.me/6289690719275 , key nya gratis kok gan, jadi santuyy ajaa'
+        getApikey: 'gak punya apikey? chat gw aja yaaa di wa.me/6282313021398 , key nya gratis kok gan, jadi santuyy ajaa'
     },
     notkey: {
         status: false,
