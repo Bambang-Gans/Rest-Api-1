@@ -509,6 +509,12 @@ const thn = d.getFullYear();
 
 const bulan = arrBulan[bln]
 
+if (menit >= 0 && menit <= 9){
+	menitt = "0" + menit;
+} else if (menit >= 10 && menit <= 59) {
+	menitt = menit;
+}
+
 var txt = "";
 
 txt += "<p><b>Browser CodeName</b>: " + navigator.appCodeName + "</p>";
