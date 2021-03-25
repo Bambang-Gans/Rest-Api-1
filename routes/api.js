@@ -318,7 +318,7 @@ router.get('/yt/play', async (req, res, next) => {
             search = req.query.search
             
 	if(!apikeyInput) return res.json(loghandler.notparam)
-	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+	if(apikeyInput != 'BambangGans') return res.json(loghandler.invalidKey)
     if(!search) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter search"})
 
 	var videos = []
@@ -339,6 +339,181 @@ router.get('/yt/play', async (req, res, next) => {
 	})
 })
 
+router.get('/textmaker/yamaker', async (req, res, next) => {
+        var theme = req.query.theme,
+             text = req.query.text,
+             text2 = req.query.text2,
+             text3 = req.query.text3,
+             apikeyInput = req.query.apikey;
+        
+	if(!apikeyInput) return res.json(loghandler.notparam)
+	if(apikeyInput != 'BambangGans') return res.json(loghandler.invalidKey)
+        if (!theme) return res.json(loghandler.nottheme)
+        if (theme != 'metal-epek' && theme != 'scary-njir') return res.json(loghandler.notheme)
+        if (!text) return res.json(loghandler.nottext)
+
+        if (theme == 'metal-epek') {
+            try {
+            request.post({
+                url: "https://photooxy.com/logo-and-text-effects/illuminated-metallic-effect-177.html",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `text_1=${text}&login=OK`,
+                }, (e,r,b) => {
+                    if (!e) {
+                        $ = cheerio.load(b)
+                        $(".thumbnail").find("img").each(function() {
+                            h = $(this).attr("src")
+                            var result = "https://photooxy.com/"+h
+                            fetch(encodeURI(`https://api.imgbb.com/1/upload?expiration=120&key=761ea2d5575581057a799d14e9c78e28&image=${result}&name=${randomTextNumber}`))
+                                .then(response => response.json())
+                                .then(data => {
+                                    var urlnya = data.data.url,
+                                        delete_url = data.data.delete_url;
+                                        res.json({
+                                            status : true,
+                                            creator : `${creator}`,
+                                            message : `jangan lupa follow ${creator}`,
+                                            result:{
+                                                url:urlnya,
+                                                delete_url: delete_url,
+                                                info: 'url akan hilang setelah 2 menit'
+                                            }
+                                        })
+                                })
+                        })
+                    }
+                })
+                } catch (e) {
+                	console.log(e);
+                res.json(loghandler.error)
+                }
+        } else if (theme == 'scary-njir') {
+            request.post({
+                url: "https://photooxy.com/logo-and-text-effects/text-on-scary-cemetery-gate-172.html",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `text_1=${text}&login=OK`,
+                }, (e,r,b) => {
+                    if (!e) {
+                        $ = cheerio.load(b)
+                        $(".thumbnail").find("img").each(function() {
+                            h = $(this).attr("src")
+                            var result = "https://photooxy.com/"+h
+                            fetch(encodeURI(`https://api.imgbb.com/1/upload?expiration=120&key=761ea2d5575581057a799d14e9c78e28&image=${result}&name=${randomTextNumber}`))
+                                .then(response => response.json())
+                                .then(data => {
+                                    var urlnya = data.data.url,
+                                        delete_url = data.data.delete_url;
+                                        res.json({
+                                            status : true,
+                                            creator : `${creator}`,
+                                            message : `jangan lupa follow ${creator}`,
+                                            result:{
+                                                url:urlnya,
+                                                delete_url: delete_url,
+                                                info: 'url akan hilang setelah 2 menit'
+                                            }
+                                        })
+                                })
+                        })
+                    }
+                }) 
+        } else {
+            res.json(loghandler.error)
+        }
+})
+
+
+router.get('/textmaker/lmo', async (req, res, next) => {
+        var theme = req.query.theme,
+             text = req.query.text,
+             text2 = req.query.text2,
+             text3 = req.query.text3,
+             apikeyInput = req.query.apikey;
+        
+	if(!apikeyInput) return res.json(loghandler.notparam)
+	if(apikeyInput != 'BambangGans') return res.json(loghandler.invalidKey)
+        if (!theme) return res.json(loghandler.nottheme)
+        if (theme != 'grapiti' && theme != 'bintang') return res.json(loghandler.notheme)
+        if (!text) return res.json(loghandler.nottext)
+
+        if (theme == 'grapiti') {
+            try {
+            request.post({
+                url: "https://photooxy.com/banner-cover/graffiti-text-cover-222.html",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `text_1=${text}&login=OK`,
+                }, (e,r,b) => {
+                    if (!e) {
+                        $ = cheerio.load(b)
+                        $(".thumbnail").find("img").each(function() {
+                            h = $(this).attr("src")
+                            var result = "https://photooxy.com/"+h
+                            fetch(encodeURI(`https://api.imgbb.com/1/upload?expiration=120&key=761ea2d5575581057a799d14e9c78e28&image=${result}&name=${randomTextNumber}`))
+                                .then(response => response.json())
+                                .then(data => {
+                                    var urlnya = data.data.url,
+                                        delete_url = data.data.delete_url;
+                                        res.json({
+                                            status : true,
+                                            creator : `${creator}`,
+                                            message : `jangan lupa follow ${creator}`,
+                                            result:{
+                                                url:urlnya,
+                                                delete_url: delete_url,
+                                                info: 'url akan hilang setelah 2 menit'
+                                            }
+                                        })
+                                })
+                        })
+                    }
+                })
+                } catch (e) {
+                	console.log(e);
+                res.json(loghandler.error)
+                }
+        } else if (theme == 'bintang') {
+            request.post({
+                url: "https://photooxy.com/logo-and-text-effects/write-stars-text-on-the-night-sky-200.html",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `text_1=${text}&login=OK`,
+                }, (e,r,b) => {
+                    if (!e) {
+                        $ = cheerio.load(b)
+                        $(".thumbnail").find("img").each(function() {
+                            h = $(this).attr("src")
+                            var result = "https://photooxy.com/"+h
+                            fetch(encodeURI(`https://api.imgbb.com/1/upload?expiration=120&key=761ea2d5575581057a799d14e9c78e28&image=${result}&name=${randomTextNumber}`))
+                                .then(response => response.json())
+                                .then(data => {
+                                    var urlnya = data.data.url,
+                                        delete_url = data.data.delete_url;
+                                        res.json({
+                                            status : true,
+                                            creator : `${creator}`,
+                                            message : `jangan lupa follow ${creator}`,
+                                            result:{
+                                                url:urlnya,
+                                                delete_url: delete_url,
+                                                info: 'url akan hilang setelah 2 menit'
+                                            }
+                                        })
+                                })
+                        })
+                    }
+                }) 
+        } else {
+            res.json(loghandler.error)
+        }
+})
+
 
 
 router.get('/yt/search', async (req, res, next) => {
@@ -346,7 +521,7 @@ router.get('/yt/search', async (req, res, next) => {
             search = req.query.search
             
 	if(!apikeyInput) return res.json(loghandler.notparam)
-	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+	if(apikeyInput != 'BambangGans') return res.json(loghandler.invalidKey)
     if(!search) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter search"})
 	try {
 scrapeYt.search(search, {
@@ -366,7 +541,7 @@ router.get('/ytdl', async (req, res, next) => {
 
 
 	if(!apikeyInput) return res.json(loghandler.notparam)
-	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+	if(apikeyInput != 'BambangGans') return res.json(loghandler.invalidKey)
     if (!url) return res.json(loghandler.noturl)
 	let playlistregex = /\/playlist\?list=/;
 	let result = []
@@ -460,7 +635,7 @@ router.get('/igdown', async (req, res, next) => {
 
 
 	if(!apikeyInput) return res.json(loghandler.notparam)
-	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+	if(apikeyInput != 'BambangGans') return res.json(loghandler.invalidKey)
     if (!url) return res.json(loghandler.noturl)
 
     var str = url
@@ -513,7 +688,7 @@ router.get('/igstalk', async (req, res, next) => {
         username = req.query.username
 
 	if(!apikeyInput) return res.json(loghandler.notparam)
-	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+	if(apikeyInput != 'BambangGans') return res.json(loghandler.invalidKey)
     if (!username) return res.json(loghandler.notusername)
 
     fetch(encodeURI(`https://www.instagram.com/${username}/?__a=1`))
