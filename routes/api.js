@@ -360,7 +360,7 @@ scrapeYt.search(search, {
   }
 })
 
-router.get('/ytvid/yta', async (req, res, next) => {
+router.get('/ytdl', async (req, res, next) => {
 	var apikeyInput = req.query.apikey,
         url = req.query.url
 
