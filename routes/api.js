@@ -30,7 +30,9 @@ var {
 	Nulis,
 	Vokal,
 	Base,
-	Searchnabi,
+	Searchnabi
+        Ytplay
+        Ytsearch,
     Gempa
 } = require('./../lib');
 var cookie = "HSID=A7EDzLn3kae2B1Njb;SSID=AheuwUjMojTWvA5GN;APISID=cgfXh13rQbb4zbLP/AlvlPJ2xBJBsykmS_;SAPISID=m82rJG4AC9nxQ5uG/A1FotfA_gi9pvo91C;__Secure-3PAPISID=m82rJG4AC9nxQ5uG/A1FotfA_gi9pvo91C;VISITOR_INFO1_LIVE=RgZLnZtCoPU;LOGIN_INFO=AFmmF2swRQIhAOXIXsKVou2azuz-kTsCKpbM9szRExAMUD-OwHYiuB6eAiAyPm4Ag3O9rbma7umBK-AG1zoGqyJinh4ia03csp5Nkw:QUQ3MjNmeXJ0UHFRS3dzaTNGRmlWR2FfMDRxa2NRYTFiN3lfTEdOVTc4QUlwbUI4S2dlVngxSG10N3ZqcHZwTHBKano5SkN2dDlPSkhRMUtReE42TkhYeUVWS3kyUE1jY2I1QzA1MDZBaktwd1llWU9lOWE4NWhoZV92aDkxeE9vMTNlcG1uMU9rYjhOaDZWdno2ZzN3TXl5TVNhSjNBRnJaMExrQXpoa2xzRVUteFNWZDI5S0Fn;PREF=app=desktop&f4=4000000&al=id;SID=2wezCMTUkWN3YS1VmS_DXaEU84J0pZIQdemM8Zry-uzWm8y1njBpLTOpxSfN-EaYCRSiDg.;YSC=HCowA1fmvzo;__Secure-3PSID=2wezCMTUkWN3YS1VmS_DXaEU84J0pZIQdemM8Zry-uzWm8y1dajgWzlBh9TgKapGOwuXfA.;SIDCC=AJi4QfFK0ri9fSfMjMQ4tOJNp6vOb9emETXB_nf2S05mvr2jBlmeEvlSsQSzPMuJl_V0wcbL1r8;__Secure-3PSIDCC=AJi4QfGeWHx-c4uTpU1rXCciO1p0s2fJWU07KrkZhWyD1Tqi8LyR-kHuBwHY9mViVYu1fRh2PA";
@@ -311,6 +313,148 @@ router.get('/tiktod', async (req, res, next) => {
              res.json(loghandler.invalidlink)
          })
 })
+
+router.get('/yt/play', async (req, res, next) => {
+	var vid = [];
+	var apikeyInput = req.query.apikey,
+            search = req.query.search
+            
+	if(!apikeyInput) return res.json(loghandler.notparam)
+	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+    if(!search) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter search"})
+
+	var videos = []
+	ytplay(search).then(async (resplay) => {
+			var gasplay = resplay[0]
+			
+			ytdldown(gasplay,'multi')
+			.then(result => {
+				res.json({status:true,creator:creator,result})
+			})
+			.catch (e=>{
+				console.log('Error :', color(e,'red'))
+				res.json(loghandler.error)
+			})
+	})
+	.catch (e => {
+		console.log('Error : ', color(e,'red'))
+	})
+})
+
+
+
+router.get('/yt/search', async (req, res, next) => {
+	var apikeyInput = req.query.apikey,
+            search = req.query.search
+            
+	if(!apikeyInput) return res.json(loghandler.notparam)
+	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+    if(!search) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter search"})
+	try {
+scrapeYt.search(search, {
+    type: "video"
+}).then(videos => {
+    res.json(videos);
+})
+} catch (err) {
+    console.log('Error :', color(err, 'red'))
+    res.json(loghandler.error)
+  }
+})
+
+router.get('/yt', async (req, res, next) => {
+	var apikeyInput = req.query.apikey,
+        url = req.query.url
+
+
+	if(!apikeyInput) return res.json(loghandler.notparam)
+	if(apikeyInput != 'GFL') return res.json(loghandler.invalidKey)
+    if (!url) return res.json(loghandler.noturl)
+	let playlistregex = /\/playlist\?list=/;
+	let result = []
+	try {
+		if (playlistregex.test(url)){
+			ytpl(url)
+			.then(info => info.items)
+			.then(info => {
+				let video
+				for(video of info){
+					result.push({
+						title: video.title,
+						id: video.id,
+						duration: video.duration
+					})
+				}
+				res.json({
+					status:true,
+					creator: creator,
+					result,
+					message: 'jangan lupa follow ' + creator
+				})
+			})
+			.catch(e => {
+				console.log(e)
+				res.json(loghandler.error)
+			})
+		} else {
+			ytdl.getInfo(url)
+			.then(info => {
+				let duration = (info.lengthSeconds/60).toString()
+				duration = duration.substring(0, duration.indexOf('.'))+':'+Math.floor((info.lengthSeconds%60).toString())
+				const max = info.videoDetails.thumbnails.reduce((prev, current) => ((prev.height > current.height) ? prev : current));
+					result.push({
+						    id: info.videoDetails.videoId,
+                            title: info.videoDetails.title,
+                            description: info.videoDetails.description,
+                            length: info.videoDetails.lengthSeconds,
+                            view: info.videoDetails.viewCount,
+                            date: info.videoDetails.publishDate,
+                            thumbnail: max,
+                            video:info.formats
+                })
+                res.json({
+				status:true,
+				creator: creator,
+                result,
+                message: 'jangan lupa follow ' + creator
+                })
+			})
+			.catch (er => {
+				console.log(er)
+				res.json(loghandler.error)
+				})
+				}
+				} catch (e) {
+					console.log(e)
+					res.json(loghandler.error)
+					} 
+	if (url && type == 'audio') {
+		try {
+    res.header('Content-Disposition', `attachment; filename="audio-zefian.mp3"`);
+    ytdl(url, {
+      format: 'mp3',
+      filter: 'audioonly',
+      filter: 'audioonly'
+      }).pipe(res);
+
+  } catch (err) {
+    res.json(loghandler.error)
+    console.log(loghandler.error)
+  }
+		} else if (url && type == 'video'){
+			try {
+    res.header('Content-Disposition', `attachment; filename="video-zefian.mp4"`);
+    ytdl(url, {
+      format: 'mp4',
+    }).pipe(res);
+
+  } catch (err) {
+    res.json(loghandler.error)
+    console.log(loghandler.error)
+  }
+  } 
+})
+
 
 router.get('/igdown', async (req, res, next) => {
     var apikeyInput = req.query.apikey,
